@@ -1,15 +1,20 @@
 import mongoose, { Schema, Types } from "mongoose"
 
 export interface ITutorProfile {
+    user: Types.ObjectId
     bio: string
     rating?: number
     schedule?: string
     qualificationIds?: Types.ObjectId[]
-    skillIds?: Types.ObjectId[]
 }
 
 const tutorProfileSchema = new Schema<ITutorProfile>(
     {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
         bio: {
             type: String,
             required: true
@@ -18,8 +23,9 @@ const tutorProfileSchema = new Schema<ITutorProfile>(
             type: Number,
             required: false
         },
+        //...
     }
 )
 
-const TutorProfileModel = mongoose.model('TutorProfile', tutorProfileSchema, 'tutor_profiles');
-export default TutorProfileModel;
+const TutorProfilesModel = mongoose.model('TutorProfile', tutorProfileSchema, 'tutor_profiles');
+export default TutorProfilesModel;
