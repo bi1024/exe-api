@@ -1,92 +1,122 @@
 import { NextFunction, Request, Response } from "express";
-import TutorScheduleModel, { ISlotAdded, ISlotUpdated } from "@/models/TutorSchedule.js";
+import TutorScheduleModel, {
+  ISlotAdded,
+  ISlotUpdated,
+} from "@/models/TutorSchedule.js";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
 import SkillsModel from "@/models/Skill.js";
-import BadReuest from "@/errors/BadRequest.js";
+import BadRequest from "@/errors/BadRequest.js";
 
 export default class TutorScheduleController {
-    public async handleGetScheduleForTutor(req: Request, res: Response, next: NextFunction) {
-        const userId = req.user!.userId;
-        
-        let tutorSchedule;
-        try {
-            tutorSchedule = await TutorScheduleModel.find({ tutor: userId }).populate('skill');
-        } catch(err) {
-            next(err);
-            return;
-        }
+  public async handleGetScheduleForTutor(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.user!.userId;
 
-        res.status(StatusCodes.OK).json(tutorSchedule);
+    let tutorSchedule;
+    try {
+      tutorSchedule = await TutorScheduleModel.find({ tutor: userId }).populate(
+        "skill",
+      );
+    } catch (err) {
+      next(err);
+      return;
     }
 
-    public async handleInsertSingleSlotForTutor(req: Request, res: Response, next: NextFunction) {
-        const userId = req.user!.userId;
+    res.status(StatusCodes.OK).json(tutorSchedule);
+  }
 
-        const { startTime, endTime, skill } = req.body as ISlotAdded;
-        let skillId : Types.ObjectId | null = null;
+  public async handleInsertSingleSlotForTutor(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.user!.userId;
 
-        try {
-            if(skill) {
-                skillId = await SkillsModel.findOne({ name: skill as string });
-                if(!skillId) {
-                    next(new BadReuest('Invalid skill, cannot CREATE new slot'));
-                    return;
-                }
-            }
-        } catch(err) {
-            next(err);
-            return;
+    const { startTime, endTime, skill } = req.body as ISlotAdded;
+    let skillId: Types.ObjectId | null = null;
+
+    try {
+      if (skill) {
+        skillId = await SkillsModel.findOne({ name: skill as string });
+        if (!skillId) {
+          next(new BadRequest("Invalid skill, cannot CREATE new slot"));
+          return;
         }
-
-        const slotAddedValue = { tutor: userId, startTime, endTime, skill: skillId };
-        let tutorSlot;
-        try {
-            tutorSlot = await TutorScheduleModel.create(slotAddedValue);
-        } catch(err) {
-            next(err);
-            return;
-        }
-        res.status(StatusCodes.OK).json(tutorSlot);
+      }
+    } catch (err) {
+      next(err);
+      return;
     }
 
-    public async handleUpdateSingleSlot(req: Request, res: Response, next: NextFunction) {
-        const { slotId } = req.params as { slotId: string };
-        const { startTime, endTime, skill } = req.body as ISlotUpdated;
-        let skillId : Types.ObjectId | null = null;
+    const slotAddedValue = {
+      tutor: userId,
+      startTime,
+      endTime,
+      skill: skillId,
+    };
+    let tutorSlot;
+    try {
+      tutorSlot = await TutorScheduleModel.create(slotAddedValue);
+    } catch (err) {
+      next(err);
+      return;
+    }
+    res.status(StatusCodes.OK).json(tutorSlot);
+  }
 
-        try {
-            if(skill) {
-                skillId = await SkillsModel.findOne({ name: skill as string });
-                if(!skillId) {
-                    next(new BadReuest('Invalid skill, cannot CREATE new slot'));
-                    return;
-                }
-            }
-        } catch(err) {
-            next(err);
-            return;
-        }
+  public async handleUpdateSingleSlot(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const { slotId } = req.params as { slotId: string };
+    const { startTime, endTime, skill } = req.body as ISlotUpdated;
+    let skillId: Types.ObjectId | null = null;
 
-        const slotUpdatedValue = { startTime, endTime, skill: skillId };
-        let tutorSlot;
-        try {
-            tutorSlot = await TutorScheduleModel.findByIdAndUpdate(slotId, slotUpdatedValue, { new: true }).populate('skill');
-        } catch(err) {
-            next(err);
-            return;
+    try {
+      if (skill) {
+        skillId = await SkillsModel.findOne({ name: skill as string });
+        if (!skillId) {
+          next(new BadRequest("Invalid skill, cannot CREATE new slot"));
+          return;
         }
-        res.status(StatusCodes.OK).json(tutorSlot);
+      }
+    } catch (err) {
+      next(err);
+      return;
     }
 
-    public async handleDeleteSingleSlot(req: Request, res: Response, next: NextFunction) {
-        const { slotId } = req.params as { slotId: string };
-        try {
-            await TutorScheduleModel.findByIdAndDelete(slotId);
-        } catch(err) {
-            next(err);
-            return;
-        }
-        res.status(StatusCodes.NO_CONTENT).json();
+    const slotUpdatedValue = { startTime, endTime, skill: skillId };
+    let tutorSlot;
+    try {
+      tutorSlot = await TutorScheduleModel.findByIdAndUpdate(
+        slotId,
+        slotUpdatedValue,
+        { new: true },
+      ).populate("skill");
+    } catch (err) {
+      next(err);
+      return;
     }
+    res.status(StatusCodes.OK).json(tutorSlot);
+  }
+
+  public async handleDeleteSingleSlot(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const { slotId } = req.params as { slotId: string };
+    try {
+      await TutorScheduleModel.findByIdAndDelete(slotId);
+    } catch (err) {
+      next(err);
+      return;
+    }
+    res.status(StatusCodes.NO_CONTENT).json();
+  }
 }

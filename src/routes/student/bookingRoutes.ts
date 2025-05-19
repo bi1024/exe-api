@@ -7,5 +7,6 @@ const studentBookingController = new StudentBookingController();
 
 studentBookingRoutes.get('/', verifyToken, verifyStudent, studentBookingController.handleGetSlotsAvailableOfTutor);
 
+
 export default studentBookingRoutes;
 
