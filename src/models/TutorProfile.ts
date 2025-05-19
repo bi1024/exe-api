@@ -5,7 +5,9 @@ export interface ITutorProfile {
     bio: string
     rating?: number
     schedule?: string
-    qualificationIds?: Types.ObjectId[]
+    qualificationIds?: Types.ObjectId[],
+
+    hourlyRate?: number
 }
 
 const tutorProfileSchema = new Schema<ITutorProfile>(
@@ -24,6 +26,11 @@ const tutorProfileSchema = new Schema<ITutorProfile>(
             required: false
         },
         //...
+
+        hourlyRate: {
+            type: Number,
+            required: false
+        }
     }
 )
 

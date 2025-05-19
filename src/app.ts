@@ -10,6 +10,7 @@ import authRoutes from "./routes/authRoutes.js";
 import skillRoutes from "@/routes/tutor/skillRoutes.js";
 import tutorScheduleRoutes from "@/routes/tutor/scheduleRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import studentBookingRoutes from "./routes/student/bookingRoutes.js";
 
 const app = express();
 
@@ -25,8 +26,9 @@ app.use(
 // Routes
 // app.use('/api/items', itemRoutes);
 app.use("/api/auth", authRoutes);
-app.use('/api/skills', skillRoutes);
-app.use('/api/tutor-schedules', tutorScheduleRoutes);
+app.use('/api/tutor/skills', skillRoutes);
+app.use('/api/tutor/schedules', tutorScheduleRoutes);
+app.use('/api/student/booking', studentBookingRoutes);
 app.use("/api/payment", paymentRoutes);
 
 // Global error handler (should be after routes)

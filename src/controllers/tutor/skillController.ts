@@ -5,7 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import SkillCategoryModel from "@/models/SkillCategory.js";
 import { Types } from "mongoose";
 
-export default class SkillController {
+export default class TutorSkillController {
     public async handleInsertSingleSkillForTeacher(req: Request, res: Response, next: NextFunction) {
         const userId = req.user!.userId;
         const { name, description, categories } = req.body as { name?: string | null, description?: string | null, categories?: string[] | null };

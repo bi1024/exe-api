@@ -1,9 +1,9 @@
 import express from "express";
-import SkillController from "@/controllers/tutor/skillController.js";
+import TutorSkillController from "@/controllers/tutor/skillController.js";
 import { verifyToken } from "@/middlewares/verifyToken.js";
 
 const skillRoutes = express.Router();
-const skillController = new SkillController();
+const skillController = new TutorSkillController();
 
 skillRoutes.get('/:skillId', verifyToken, skillController.handleGetSingleSkill);
 skillRoutes.get('/', verifyToken, skillController.handleGetSkillsForTeacher);
