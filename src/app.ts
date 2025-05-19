@@ -9,6 +9,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import skillRoutes from "./routes/skillRoutes.js";
 import tutorScheduleRoutes from "./routes/tutorScheduleRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/tutor-schedules', tutorScheduleRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // Global error handler (should be after routes)
 app.use(errorHandler);
