@@ -8,7 +8,7 @@ const JWT_SECRET = config.jwtSecret;
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, fullname, phone } = req.body;
+    const { username, email, password, fullname, phone, role } = req.body;
 
     const existing = await User.findOne({ $or: [{ email }, { username }] });
     if (existing) {
@@ -22,6 +22,7 @@ export const register = async (req: Request, res: Response) => {
         password: hashedPassword,
         fullname,
         phone,
+        role,
       });
 
       await user.save();
