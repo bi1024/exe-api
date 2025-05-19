@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import TutorScheduleModel, { ISlotAdded, ISlotUpdated } from "../models/TutorSchedule.js";
+import TutorScheduleModel, { ISlotAdded, ISlotUpdated } from "@/models/TutorSchedule.js";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
-import SkillsModel from "../models/Skill.js";
-import BadReuest from "../errors/BadRequest.js";
+import SkillsModel from "@/models/Skill.js";
+import BadReuest from "@/errors/BadRequest.js";
 
 export default class TutorScheduleController {
     public async handleGetScheduleForTutor(req: Request, res: Response, next: NextFunction) {
-        const userId = '68283fe3afce1a3e4278028a'; // todo
+        const userId = req.user!.userId;
         
         let tutorSchedule;
         try {
@@ -21,7 +21,7 @@ export default class TutorScheduleController {
     }
 
     public async handleInsertSingleSlotForTutor(req: Request, res: Response, next: NextFunction) {
-        const userId = '68283fe3afce1a3e4278028a'; // todo
+        const userId = req.user!.userId;
 
         const { startTime, endTime, skill } = req.body as ISlotAdded;
         let skillId : Types.ObjectId | null = null;

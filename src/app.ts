@@ -7,8 +7,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/authRoutes.js";
-import skillRoutes from "./routes/skillRoutes.js";
-import tutorScheduleRoutes from "./routes/tutorScheduleRoutes.js";
+import skillRoutes from "@/routes/tutor/skillRoutes.js";
+import tutorScheduleRoutes from "@/routes/tutor/scheduleRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
 const app = express();
