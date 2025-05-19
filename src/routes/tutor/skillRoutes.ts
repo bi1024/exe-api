@@ -1,6 +1,6 @@
 import express from "express";
 import TutorSkillController from "@/controllers/tutor/skillController.js";
-import { verifyToken } from "@/middlewares/verifyToken.js";
+import { verifyToken } from "@/middlewares/authMiddleware.js";
 
 const skillRoutes = express.Router();
 const skillController = new TutorSkillController();

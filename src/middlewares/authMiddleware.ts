@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_default_secret"; // Make sure this is set in .env
@@ -23,3 +24,19 @@ export const verifyToken = (
     }
   }
 };
+
+export function verifyStudent(req: Request, res: Response, next: NextFunction) {
+  if(req.user!.role !== 'user') {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied. Must be Student' });
+  } else {
+    next();
+  }
+}
+
+export function verifyTutor(req: Request, res: Response, next: NextFunction) {
+  if(req.user!.role !== 'tutor') {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied. Must be Tutor' });
+  } else {
+    next();
+  }
+}
