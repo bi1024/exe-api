@@ -119,4 +119,32 @@ export default class TutorScheduleController {
     }
     res.status(StatusCodes.NO_CONTENT).json();
   }
+  public async handleGetScheduleToday(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.user.userId;
+
+    const now = new Date();
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    try {
+      const result = await TutorScheduleModel.find({
+        student: userId,
+        startTime: {
+          $gte: startOfDay,
+          $lte: endOfDay,
+        },
+      });
+      console.log(result);
+      res.status(StatusCodes.OK).json(result);
+    } catch (err) {
+      next(err);
+      return;
+    }
+  }
 }
