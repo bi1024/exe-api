@@ -55,6 +55,7 @@ router.get("/vnpay/return", async (req, res) => {
     if (vnpResponse.vnp_ResponseCode === "00") {
       payment.status = "success";
       tutorSchedule.isBooked = true;
+      tutorSchedule.student = payment.userId;
       await payment.save();
       await tutorSchedule.save();
       res.redirect(
@@ -62,6 +63,7 @@ router.get("/vnpay/return", async (req, res) => {
       );
     } else {
       payment.status = "failed";
+
       await payment.save();
       res.redirect(`http://localhost:5173/payment-failed`); //todo:hardcoded
     }
