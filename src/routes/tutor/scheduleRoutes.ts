@@ -34,6 +34,13 @@ tutorScheduleRoutes.delete(
   tutorScheduleController.handleDeleteSingleSlot,
 );
 
+tutorScheduleRoutes.get(
+  "/tutor-schedule-today",
+  verifyToken,
+  verifyTutor,
+  tutorScheduleController.handleGetScheduleTodayTutor,
+);
+
 //student
 tutorScheduleRoutes.get(
   "/schedule-today",
