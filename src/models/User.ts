@@ -29,4 +29,14 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
+userSchema.virtual("skills", {
+  ref: "Skill",
+  localField: "_id",
+  foreignField: "tutor",
+  // justOne: false,
+});
+
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
+
 export default mongoose.model<IUser>("User", userSchema);
