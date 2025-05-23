@@ -37,14 +37,14 @@ export default class RoomService {
                 roomId = await createRoom({ scheduleId });
             } else {
                 roomId = room.roomId;
-                socket.join(roomId);
-                socket.to(roomId).emit('user-joined', { peerId });
-
-                socket.on('leave-room', () => {
-                    console.log(`user ${peerId} left the room ${roomId}`);
-                    leaveRoom({ roomId, peerId });
-                })
             }
+            socket.join(roomId);
+            socket.to(roomId).emit('user-joined', { peerId });
+
+            socket.on('leave-room', () => {
+                console.log(`user ${peerId} left the room ${roomId}`);
+                leaveRoom({ roomId, peerId });
+            })
             socket.emit('join-succeed', { roomId });
 
             socket.on('disconnect', () => {
