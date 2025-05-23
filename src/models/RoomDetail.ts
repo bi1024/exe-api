@@ -2,7 +2,7 @@ import mongoose, { Schema, Types } from "mongoose";
 
 export interface IRoomDetail {
     scheduleId: Types.ObjectId
-    roomUrl: string
+    roomId: string
 }
 
 const roomDetailSchema = new Schema<IRoomDetail>(
@@ -13,10 +13,10 @@ const roomDetailSchema = new Schema<IRoomDetail>(
             required: [true, 'scheduleId is required'],
             unique: [true, 'scheduleId is unique']
         },
-        roomUrl: {
+        roomId: {
             type: String,
-            required: [true, 'roomUrl is required'],
-            unique: [true, 'roomUrl is unique']
+            required: [true, 'roomId is required'],
+            unique: [true, 'roomId is unique']
         }
     }
 )

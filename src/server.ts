@@ -3,7 +3,7 @@ import config from "./config/config.js";
 import connectDB from "./lib/db.js";
 import { Socket, Server as SocketServer } from 'socket.io';
 
-import RoomService from "./services/RoomService.js";
+import RoomService from "./services/roomServiceV2.js";
 
 const roomService = new RoomService();
 
