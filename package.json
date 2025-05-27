@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
     "dev": "npx tsx watch src/server.ts",
     "lint": "eslint 'src/**/*.ts'"
@@ -30,6 +30,7 @@
     "npm": "^11.3.0",
     "prettier": "3.5.3",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1"

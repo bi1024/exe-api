@@ -21,11 +21,17 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
+    // origin: "*",
     credentials: true,
   }),
 );
 // Routes
 // app.use('/api/items', itemRoutes);
+
+app.get('/api', (req, res) => {
+  res.json('Welcome!');
+})
+
 app.use("/api/auth", authRoutes);
 app.use("/api/tutor", tutorRoutes);
 app.use("/api/tutor/skills", skillRoutes);

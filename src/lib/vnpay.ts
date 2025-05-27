@@ -1,4 +1,4 @@
-import { VNPay, ignoreLogger } from "vnpay";
+import { HashAlgorithm, VNPay, ignoreLogger } from "vnpay";
 
 export const vnpay = new VNPay({
   // Thông tin cấu hình bắt buộc
@@ -8,7 +8,7 @@ export const vnpay = new VNPay({
 
   // Cấu hình tùy chọn
   testMode: true, // Chế độ test
-  hashAlgorithm: "SHA512", // Thuật toán mã hóa
+  hashAlgorithm: "SHA512" as HashAlgorithm, // Thuật toán mã hóa
   enableLog: true, // Bật/tắt ghi log
   // loggerFn: ignoreLogger, // Hàm xử lý log tùy chỉnh
 
