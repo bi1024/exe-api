@@ -11,6 +11,7 @@ export interface IUser extends Document {
   avatarUrl?: string;
   role: UserRole;
   accountBalance: number;
+  hourlyRate: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,6 +26,7 @@ const userSchema = new Schema<IUser>(
     avatarUrl: { type: String },
     role: { type: String, enum: ["user", "tutor", "admin"], default: "user" },
     accountBalance: { type: Number, default: 0 },
+    hourlyRate: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

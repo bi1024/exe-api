@@ -4,45 +4,13 @@ import { dateFormat, ProductCode, VnpLocale } from "vnpay";
 import { v4 as uuidv4 } from "uuid";
 import { verifyStudent, verifyToken } from "@/middlewares/authMiddleware.js";
 import TutorScheduleModel from "@/models/TutorSchedule.js";
-import LessonModel from "@/models/Lesson.js";
 import PaymentTransaction from "@/models/payment/PaymentTransaction.js";
+import User from "@/models/User.js";
+import { createPayment } from "@/controllers/paymentController.js";
 
 const router = express.Router();
 
-router.post("/create-payment", verifyToken, verifyStudent, async (req, res) => {
-  console.log(req.user);
-  console.log(req.body);
-  //needs userid, tutorid, slotid, skill
-  const tomorrow = new Date();
-  console.log("body", req.body.scheduleId);
-  const tutorSchedule = await TutorScheduleModel.findById(req.body.scheduleId);
-  console.log(tutorSchedule);
-
-  const amount = 10000; //todo:hardcoded
-
-  const newPayment = await PaymentTransaction.create({
-    // your lesson data here...
-    userId: req.user.userId,
-    scheduleId: tutorSchedule?._id,
-    amount: amount,
-  });
-
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const paymentUrl = vnpay.buildPaymentUrl({
-    vnp_Amount: amount, //todo: hardcoded, change later
-    vnp_IpAddr: "13.160.92.202",
-    vnp_TxnRef: newPayment.id,
-    vnp_OrderInfo: `Thanh toan don hang ${uuidv4()}`,
-    vnp_OrderType: ProductCode.Other,
-    vnp_ReturnUrl: "http://localhost:3000/api/payment/vnpay/return", //todo:hardcoded, change if deployed
-    vnp_Locale: VnpLocale.VN, // 'vn' hoặc 'en'
-    vnp_CreateDate: dateFormat(new Date()), // tùy chọn, mặc định là thời gian hiện tại
-    vnp_ExpireDate: dateFormat(tomorrow), // tùy chọn
-  });
-
-  // res.redirect(paymentUrl)
-  res.status(201).json(paymentUrl);
-});
+router.post("/create-payment", verifyToken, verifyStudent, createPayment);
 
 router.get("/vnpay/return", async (req, res) => {
   const vnpResponse = req.query;
