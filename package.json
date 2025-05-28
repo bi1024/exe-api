@@ -2,7 +2,7 @@
   "name": "exe-api",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/server.js",
