@@ -20,7 +20,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://exe-ui.onrender.com",
+    origin: "https://exe-ui-2.onrender.com",
     // origin: "*",
     credentials: true,
   }),
