@@ -12,6 +12,8 @@ import tutorScheduleRoutes from "@/routes/tutor/scheduleRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import studentBookingRoutes from "./routes/student/bookingRoutes.js";
 import tutorRoutes from "./routes/tutor/tutorRoutes.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
@@ -20,7 +22,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://exe-ui-2.onrender.com",
+    origin: process.env.FRONT_END_URL || 'http://localhost:5173',
     // origin: "*",
     credentials: true,
   }),
