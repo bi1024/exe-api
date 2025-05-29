@@ -11,6 +11,7 @@ export interface IUser extends Document {
   avatarUrl?: string;
   role: UserRole;
   accountBalance: number;
+  hourlyRate: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,8 +26,19 @@ const userSchema = new Schema<IUser>(
     avatarUrl: { type: String },
     role: { type: String, enum: ["user", "tutor", "admin"], default: "user" },
     accountBalance: { type: Number, default: 0 },
+    hourlyRate: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
+
+userSchema.virtual("skills", {
+  ref: "Skill",
+  localField: "_id",
+  foreignField: "tutor",
+  // justOne: false,
+});
+
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
 
 export default mongoose.model<IUser>("User", userSchema);
