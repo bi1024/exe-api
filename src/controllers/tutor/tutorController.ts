@@ -67,6 +67,20 @@ export const getCerts = async (req: Request, res: Response) => {
   }
 };
 
+export const getTutorCerts = async (req: Request, res: Response) => {
+  const certId = req.params.tutorId;
+  // const userId = req.user!.userId;
+  try {
+    const certs = await CertsModel.find({ tutor: certId });
+    res.status(200).json({ success: true, data: certs });
+  } catch (error) {
+    console.error("Failed to fetch certs:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to retrieve tcerts." });
+  }
+};
+
 export const deleteCert = async (req: Request, res: Response) => {
   const certId = req.params.id;
   try {
