@@ -1,6 +1,7 @@
 import {
   deleteCert,
   getCerts,
+  getTutorCerts,
   getTutorOwnHourlyRate,
   getTutors,
   updateHourlyRate,
@@ -33,6 +34,8 @@ tutorRoutes.post(
 
 tutorRoutes.get("/certs", verifyToken, verifyTutor, getCerts);
 
-tutorRoutes.delete("/certs/:id",verifyToken,verifyTutor,deleteCert)
+tutorRoutes.get("/certs/:tutorId", verifyToken, getTutorCerts);
+
+tutorRoutes.delete("/certs/:id", verifyToken, verifyTutor, deleteCert);
 
 export default tutorRoutes;
