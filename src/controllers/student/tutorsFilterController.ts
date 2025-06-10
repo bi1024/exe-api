@@ -50,6 +50,8 @@ export default class TutorsFilterController {
         const categoriesFilter = skillCategoryName === 'all' ? { } : { categories : skillCategory };
         const tutorNameFilter = search ? { fullname: search } : { };
 
+
+
         try {
             async function filter() {
                 let skills;
@@ -64,7 +66,6 @@ export default class TutorsFilterController {
                 skills = skills.filter(tutor => tutor.tutor !== null);
 
                 // search by skill 
-
                 // already have skills -> stop searching more
                 if(skills.length) return skills;
                 skills = await SkillsModel
