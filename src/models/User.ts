@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export type UserRole = "user" | "tutor" | "admin";
+export type UserStatus = "pending" | "approved" | "rejected" | "suspended";
 
 export interface IUser extends Document {
   username: string;
@@ -15,6 +16,7 @@ export interface IUser extends Document {
   hourlyRate: number;
   createdAt: Date;
   updatedAt: Date;
+  status: UserStatus
 }
 
 const userSchema = new Schema<IUser>(
@@ -29,6 +31,7 @@ const userSchema = new Schema<IUser>(
     role: { type: String, enum: ["user", "tutor", "admin"], default: "user" },
     accountBalance: { type: Number, default: 0 },
     hourlyRate: { type: Number, default: 0 },
+    status: { type: String, enum: ["pending", "approved", "rejected", "suspended"], default: "pending" }
   },
   { timestamps: true },
 );
