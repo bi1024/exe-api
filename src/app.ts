@@ -12,9 +12,13 @@ import tutorScheduleRoutes from "@/routes/tutor/scheduleRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import studentBookingRoutes from "./routes/student/bookingRoutes.js";
 import tutorRoutes from "./routes/tutor/tutorRoutes.js";
-import dotenv from 'dotenv';
+
+import dotenv from "dotenv";
+import profileRoutes from "./routes/profileRoutes.js";
+
 import tutorsFilterRoutes from "./routes/student/tutorsFilterRoutes.js";
 import tutorsManagementRoutes from "./routes/admin/tutorsManagementRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -24,7 +28,7 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.FRONT_END_URL || 'http://localhost:5173',
+    origin: process.env.FRONT_END_URL || "http://localhost:5173",
     // origin: "*",
     credentials: true,
   }),
@@ -32,9 +36,9 @@ app.use(
 // Routes
 // app.use('/api/items', itemRoutes);
 
-app.get('/api', (req, res) => {
-  res.json('Welcome!');
-})
+app.get("/api", (req, res) => {
+  res.json("Welcome!");
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tutor", tutorRoutes);
@@ -43,6 +47,7 @@ app.use("/api/tutor/schedules", tutorScheduleRoutes);
 app.use("/api/student/booking", studentBookingRoutes);
 app.use("/api/student/tutors-filter", tutorsFilterRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.use("/api/admin/tutors", tutorsManagementRoutes);
 
