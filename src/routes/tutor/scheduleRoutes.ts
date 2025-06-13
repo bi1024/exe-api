@@ -1,51 +1,41 @@
 import express from "express";
 import TutorScheduleController from "@/controllers/tutor/scheduleController.js";
 import {
-  verifyStudent,
   verifyToken,
   verifyTutor,
+  verifyTutorApproved,
 } from "@/middlewares/authMiddleware.js";
 
 const tutorScheduleRoutes = express.Router();
 const tutorScheduleController = new TutorScheduleController();
 
+tutorScheduleRoutes.use(verifyToken, verifyTutor, verifyTutorApproved);
+
 tutorScheduleRoutes.get(
   "/",
-  verifyToken,
-  verifyTutor,
   tutorScheduleController.handleGetScheduleForTutor,
 );
 tutorScheduleRoutes.post(
   "/",
-  verifyToken,
-  verifyTutor,
   tutorScheduleController.handleInsertSingleSlotForTutor,
 );
 tutorScheduleRoutes.put(
   "/:slotId",
-  verifyToken,
-  verifyTutor,
   tutorScheduleController.handleUpdateSingleSlot,
 );
 tutorScheduleRoutes.delete(
   "/:slotId",
-  verifyToken,
-  verifyTutor,
   tutorScheduleController.handleDeleteSingleSlot,
 );
 
 tutorScheduleRoutes.get(
   "/tutor-schedule-today",
-  verifyToken,
-  verifyTutor,
   tutorScheduleController.handleGetScheduleTodayTutor,
 );
 
 //student
 tutorScheduleRoutes.get(
   "/schedule-today",
-  verifyToken,
-  verifyStudent,
   tutorScheduleController.handleGetScheduleToday,
 );
 

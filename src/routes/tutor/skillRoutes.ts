@@ -1,9 +1,11 @@
 import express from "express";
 import TutorSkillController from "@/controllers/tutor/skillController.js";
-import { verifyToken } from "@/middlewares/authMiddleware.js";
+import { verifyToken, verifyTutor, verifyTutorApproved } from "@/middlewares/authMiddleware.js";
 
 const skillRoutes = express.Router();
 const skillController = new TutorSkillController();
+
+skillRoutes.use(verifyToken, verifyTutor, verifyTutorApproved);
 
 skillRoutes.get('/:skillId', verifyToken, skillController.handleGetSingleSkill);
 skillRoutes.get('/', verifyToken, skillController.handleGetSkillsForTeacher);
