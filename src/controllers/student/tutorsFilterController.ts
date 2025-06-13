@@ -17,6 +17,7 @@ _id: string | Types.ObjectId
   username: string
   fullname: string
   skill: ISkill
+  hourlyRate: number
 }
 
 interface ITutor {
@@ -24,6 +25,7 @@ interface ITutor {
   username: string
   fullname: string
   skills: ISkill[]
+  hourlyRate: number
 }
 
 export default class TutorsFilterController {
@@ -81,7 +83,7 @@ export default class TutorsFilterController {
                         match: tutorFilter
                     })
 
-                skills = skills.filter(tutor => tutor.tutor !== null);
+                skills = skills.filter(tutor => tutor.tutor !== null && tutor.tutor.status !== 'pending');
 
                 // already have skills -> stop searching more
                 if(skills.length) return skills;
@@ -99,7 +101,7 @@ export default class TutorsFilterController {
                         match: tutorFilter
                     })
 
-                skills = skills.filter(tutor => tutor.tutor !== null);
+                skills = skills.filter(tutor => tutor.tutor !== null && tutor.tutor.status !== 'pending');
                 return skills;
             }
 
@@ -127,6 +129,7 @@ export default class TutorsFilterController {
                     _id: skillDetails.tutor._id,
                     username: skillDetails.tutor.username,
                     fullname: skillDetails.tutor.fullname,
+                    hourlyRate: skillDetails.tutor.hourlyRate,
                     skill
                 }
                 tutors.push(tutor);
@@ -144,6 +147,7 @@ export default class TutorsFilterController {
                     _id: tutor._id,
                     fullname: tutor.fullname,
                     username: tutor.username,
+                    hourlyRate: tutor.hourlyRate,
                     skills: [tutor.skill]
                 }
                 tutorsFormatted.push(tutorFormatted);
