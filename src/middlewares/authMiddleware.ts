@@ -40,3 +40,11 @@ export function verifyTutor(req: Request, res: Response, next: NextFunction) {
     next();
   }
 }
+
+export function verifyTutorApproved(req: Request, res: Response, next: NextFunction) {
+  if(req.user!.status !== 'approved') {
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'Access denied. Tutor must be approved' });
+  } else {
+    next();
+  }
+}
