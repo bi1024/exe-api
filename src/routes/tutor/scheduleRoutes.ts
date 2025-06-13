@@ -19,14 +19,6 @@ tutorScheduleRoutes.post(
   "/",
   tutorScheduleController.handleInsertSingleSlotForTutor,
 );
-tutorScheduleRoutes.put(
-  "/:slotId",
-  tutorScheduleController.handleUpdateSingleSlot,
-);
-tutorScheduleRoutes.delete(
-  "/:slotId",
-  tutorScheduleController.handleDeleteSingleSlot,
-);
 
 tutorScheduleRoutes.get(
   "/tutor-schedule-today",
@@ -37,6 +29,18 @@ tutorScheduleRoutes.get(
 tutorScheduleRoutes.get(
   "/schedule-today",
   tutorScheduleController.handleGetScheduleToday,
+);
+tutorScheduleRoutes.put(
+  "/:slotId",
+  verifyToken,
+  verifyTutor,
+  tutorScheduleController.handleUpdateSingleSlot,
+);
+tutorScheduleRoutes.delete(
+  "/:slotId",
+  verifyToken,
+  verifyTutor,
+  tutorScheduleController.handleDeleteSingleSlot,
 );
 
 export default tutorScheduleRoutes;
