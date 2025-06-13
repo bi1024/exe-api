@@ -57,7 +57,7 @@ export const updateHourlyRate = async (req: Request, res: Response) => {
 export const getCerts = async (req: Request, res: Response) => {
   const userId = req.user!.userId;
   try {
-    const certs = await CertsModel.find({ tutor: userId });
+    const certs = await CertsModel.find({ tutor: userId }).populate("skill");
     res.status(200).json({ success: true, data: certs });
   } catch (error) {
     console.error("Failed to fetch certs:", error);
@@ -71,7 +71,8 @@ export const getTutorCerts = async (req: Request, res: Response) => {
   const certId = req.params.tutorId;
   // const userId = req.user!.userId;
   try {
-    const certs = await CertsModel.find({ tutor: certId });
+    const certs = await CertsModel.find({ tutor: certId }).populate("skill");
+    console.log(certs);
     res.status(200).json({ success: true, data: certs });
   } catch (error) {
     console.error("Failed to fetch certs:", error);
@@ -101,6 +102,7 @@ export const uploadCert = async (req: Request, res: Response) => {
         tutor: userId,
         name: req.body.certName,
         description: req.body.certDesc,
+        skill: req.body.skillId,
         imageUrl: imageUrl,
       } as ICert;
       const result = await CertsModel.create(newCert);
