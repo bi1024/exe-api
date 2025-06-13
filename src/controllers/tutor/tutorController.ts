@@ -5,7 +5,10 @@ import { Request, Response } from "express";
 
 export const getTutors = async (req: Request, res: Response) => {
   try {
-    const tutors = await User.find({ role: "tutor" })
+    const tutors = await User.find({
+      role: "tutor",
+      status: { $ne: "pending" },
+    })
       .select("-password")
       .populate("skills"); // omit password from response
     res.status(200).json({ success: true, data: tutors });
