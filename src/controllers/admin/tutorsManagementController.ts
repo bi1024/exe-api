@@ -30,7 +30,7 @@ export default class TutorsManagementController {
         const tutorsFormatted : ITutorPending[] = [];
         for(const tutor of tutors) {
             const certs = await CertsModel.find({ tutor: tutor._id });
-            const tutorFormatted = tutor.toObject() as ITutorPending;
+            const tutorFormatted = tutor.toObject() as any; //TODO
             tutorFormatted['certifications'] = certs;
             tutorsFormatted.push(tutorFormatted);
         }
