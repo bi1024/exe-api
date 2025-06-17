@@ -22,6 +22,25 @@ export const getMyProfile = async (
   res.status(StatusCodes.OK).json(myProfile);
 };
 
+export const getTutorProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // const userId = req.user!.userId;
+  const userId = req.params.id;
+  // const myProfile = await User.findById(userId);
+
+  let myProfile;
+  try {
+    myProfile = await User.findById(userId);
+  } catch (err) {
+    next(err);
+    return;
+  }
+
+  res.status(StatusCodes.OK).json(myProfile);
+};
 export const updateMyProfile = async (
   req: Request,
   res: Response,

@@ -5,6 +5,7 @@ export interface ICert {
   name: string;
   description: string;
   imageUrl: string;
+  skill?: Types.ObjectId;
 }
 
 const certSchema = new Schema<ICert>({
@@ -28,6 +29,10 @@ const certSchema = new Schema<ICert>({
       required: true,
     },
   ],
+  skill: {
+    type: Schema.Types.ObjectId,
+    ref: "Skill",
+  },
 });
 
 const CertsModel = mongoose.model<ICert>("Cert", certSchema);

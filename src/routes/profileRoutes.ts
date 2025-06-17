@@ -1,13 +1,14 @@
 import express from "express";
 // import TutorSkillController from "@/controllers/tutor/skillController.js";
 import { verifyToken } from "@/middlewares/authMiddleware.js";
-import { getMyProfile, updateMyProfile } from "@/controllers/profileController";
+import { getMyProfile, getTutorProfile, updateMyProfile } from "@/controllers/profileController";
 import upload from "@/lib/multer";
 
 const profileRoutes = express.Router();
 // const skillController = new TutorSkillController();
 
 profileRoutes.get("/myProfile", verifyToken, getMyProfile);
+profileRoutes.get("/:id", verifyToken, getTutorProfile);
 profileRoutes.post(
   "/myProfile",
   verifyToken,
