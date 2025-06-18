@@ -1,6 +1,7 @@
 import BadRequest from "@/errors/BadRequest";
 import SkillsModel from "@/models/Skill";
 import SkillCategoryModel, { ISkillCategory } from "@/models/SkillCategory";
+import { TutorReviewModel } from "@/models/TutorReview";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
@@ -26,6 +27,7 @@ interface ITutor {
   fullname: string
   skills: ISkill[]
   hourlyRate: number
+  averageRating?: number
 }
 
 export default class TutorsFilterController {
@@ -156,7 +158,32 @@ export default class TutorsFilterController {
             }
         }
 
-        res.status(StatusCodes.OK).json({ data: tutorsFormatted });
+        const tutorsResponsed = [];
+        for(const tutor of tutorsFormatted) {
+            const result = await TutorReviewModel.aggregate([
+                {
+                    $match: {
+                        tutor: tutor._id
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        ratingAverage: { $avg: '$rating' }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        ratingAverage: 1
+                    }
+                }
+            ])  
+            const ratingAverage = result.length ? result[0].ratingAverage : 0;
+            tutorsResponsed.push({ ...tutor, ratingAverage });
+        }
+
+        res.status(StatusCodes.OK).json({ data: tutorsResponsed });
     }
 
     // public async handleFilterTutors2(req: Request, res: Response, next: NextFunction) {

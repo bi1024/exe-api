@@ -18,6 +18,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 
 import tutorsFilterRoutes from "./routes/student/tutorsFilterRoutes.js";
 import tutorsManagementRoutes from "./routes/admin/tutorsManagementRoutes.js";
+import tutorReviewRoutes from "./routes/student/tutorReviewRoutes.js";
 
 dotenv.config();
 
@@ -50,7 +51,8 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/profile", profileRoutes);
 
 app.use("/api/admin/tutors", tutorsManagementRoutes);
-
+app.use("/api/review", tutorReviewRoutes);
+  
 // Global error handler (should be after routes)
 app.use(errorHandler);
 

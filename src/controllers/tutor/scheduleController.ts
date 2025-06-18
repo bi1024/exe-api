@@ -18,9 +18,12 @@ export default class TutorScheduleController {
 
     let tutorSchedule;
     try {
-      tutorSchedule = await TutorScheduleModel.find({ tutor: userId }).populate(
-        "skill",
-      );
+      tutorSchedule = await TutorScheduleModel
+        .find({ tutor: userId })
+        .populate(
+          "skill",
+        )
+        .lean();      
     } catch (err) {
       next(err);
       return;
