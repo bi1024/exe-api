@@ -2,11 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import TutorScheduleModel, {
   ISlotAdded,
   ISlotUpdated,
+  ITutorSchedule,
 } from "@/models/TutorSchedule.js";
 import { StatusCodes } from "http-status-codes";
 import { Types } from "mongoose";
 import SkillsModel from "@/models/Skill.js";
 import BadRequest from "@/errors/BadRequest.js";
+import { getCurrentMonth, getCurrentWeek, getNextMonths, getNextWeeks } from "@/utils/dateUtils";
+import { addMonths, addWeeks, endOfDay, startOfDay } from "date-fns";
 
 export default class TutorScheduleController {
   public async handleGetScheduleForTutor(
@@ -18,12 +21,9 @@ export default class TutorScheduleController {
 
     let tutorSchedule;
     try {
-      tutorSchedule = await TutorScheduleModel
-        .find({ tutor: userId })
-        .populate(
-          "skill",
-        )
-        .lean();      
+      tutorSchedule = await TutorScheduleModel.find({ tutor: userId })
+        .populate("skill")
+        .lean();
     } catch (err) {
       next(err);
       return;
@@ -187,5 +187,113 @@ export default class TutorScheduleController {
       next(err);
       return;
     }
+  }
+
+  public async handleCopyWeeksSchedule(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.user!.userId;
+    const { numberOfWeeks } = req.body as { numberOfWeeks: number };
+    const { start, end } = getCurrentWeek();
+    let currentWeekSchedule: ITutorSchedule[];
+    try {
+      currentWeekSchedule = await TutorScheduleModel.find({
+        tutor: userId,
+        startTime: { $gte: startOfDay(start), $lte: endOfDay(end) },
+        endTime: { $gte: startOfDay(start), $lte: endOfDay(end) },
+      })
+        .populate("skill")
+        .lean();
+    } catch (err) {
+      next(err);
+      return;
+    }
+
+    // todo: delete all slots of next weeks before inserting new ones
+
+    const { start: nextWeekStart, end: lastWeekEnd } =
+      getNextWeeks(numberOfWeeks);
+    // console.log(nextWeekStart + ", " + lastWeekEnd);
+    await TutorScheduleModel.deleteMany({
+      tutor: userId,
+      startTime: {
+        $gte: startOfDay(nextWeekStart),
+        $lte: endOfDay(lastWeekEnd),
+      },
+      endTime: { $gte: startOfDay(nextWeekStart), $lte: endOfDay(lastWeekEnd) },
+    });
+
+    for (const slot of currentWeekSchedule) {
+      const { startTime, endTime, skill } = slot;
+      for (let i = 1; i <= numberOfWeeks; ++i) {
+        const nextStartTime = addWeeks(startTime, i);
+        const nextEndTime = addWeeks(endTime, i);
+        const slotAdded: ISlotAdded = {
+          tutor: userId,
+          startTime: nextStartTime,
+          endTime: nextEndTime,
+          skill,
+        };
+        await TutorScheduleModel.create(slotAdded);
+      }
+    }
+
+    res.status(StatusCodes.CREATED).json({ success: true });
+  }
+
+  public async handleCopyMonthsSchedule(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const userId = req.user!.userId;
+    const { numberOfMonths } = req.body as { numberOfMonths: number };
+    const { start, end } = getCurrentMonth();
+
+    let currentMonthSchedule: ITutorSchedule[];
+    try {
+      currentMonthSchedule = await TutorScheduleModel.find({
+        tutor: userId,
+        startTime: { $gte: startOfDay(start), $lte: endOfDay(end) },
+        endTime: { $gte: startOfDay(start), $lte: endOfDay(end) },
+      })
+        .populate("skill")
+        .lean();
+    } catch (err) {
+      next(err);
+      return;
+    }
+
+    console.log(currentMonthSchedule.length);
+    const { start: nextMonthStart, end: lastMonthEnd } =
+      getNextMonths(numberOfMonths);
+
+    await TutorScheduleModel.deleteMany({
+      tutor: userId,
+      startTime: {
+        $gte: startOfDay(nextMonthStart),
+        $lte: endOfDay(lastMonthEnd),
+      },
+      endTime: { $gte: startOfDay(nextMonthStart), $lte: endOfDay(lastMonthEnd) },
+    });
+
+    for (const slot of currentMonthSchedule) {
+      const { startTime, endTime, skill } = slot;
+      for (let i = 1; i <= numberOfMonths; ++i) {
+        const nextStartTime = addMonths(startTime, i);
+        const nextEndTime = addMonths(endTime, i);
+        const slotAdded: ISlotAdded = {
+          tutor: userId,
+          startTime: nextStartTime,
+          endTime: nextEndTime,
+          skill,
+        };
+        await TutorScheduleModel.create(slotAdded);
+      }
+    }
+
+    res.status(StatusCodes.CREATED).json({ success: true });
   }
 }
