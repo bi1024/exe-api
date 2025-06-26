@@ -43,4 +43,7 @@ tutorScheduleRoutes.delete(
   tutorScheduleController.handleDeleteSingleSlot,
 );
 
+tutorScheduleRoutes.post('/copy-current-week', tutorScheduleController.handleCopyWeeksSchedule);
+tutorScheduleRoutes.post('/copy-current-month', tutorScheduleController.handleCopyMonthsSchedule);
+
 export default tutorScheduleRoutes;

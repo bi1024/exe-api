@@ -20,7 +20,7 @@ export interface ITutorSchedule {
 
 export type ISlotAdded = Pick<
   ITutorSchedule,
-  "startTime" | "endTime" | "skill"
+  "startTime" | "endTime" | "skill" | "tutor"
 >;
 export type ISlotUpdated = Pick<
   ITutorSchedule,
