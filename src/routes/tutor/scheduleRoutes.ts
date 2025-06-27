@@ -9,7 +9,7 @@ import {
 const tutorScheduleRoutes = express.Router();
 const tutorScheduleController = new TutorScheduleController();
 
-tutorScheduleRoutes.use(verifyToken, verifyTutor, verifyTutorApproved);
+tutorScheduleRoutes.use(verifyToken);
 
 tutorScheduleRoutes.get(
   "/",
