@@ -5,6 +5,8 @@ import TutorScheduleModel from "@/models/TutorSchedule.js";
 import PaymentTransaction from "@/models/payment/PaymentTransaction.js";
 
 import { createPayment } from "@/controllers/paymentController.js";
+import { getTutorProfile } from "@/controllers/profileController";
+import User from "@/models/User";
 
 const router = express.Router();
 
@@ -24,12 +26,16 @@ router.get("/vnpay/return", async (req, res) => {
       tutorSchedule.student = payment.userId;
       await payment.save();
       await tutorSchedule.save();
+      const tutor = await await User.findById(tutorSchedule.tutor);
+
+      tutor!.accountBalance += payment.amount * 0.9;
+      await tutor?.save();
+
       res.redirect(
         `${frontendUrl}/payment-confirmation?vnp_TxnRef=${vnpResponse.vnp_TxnRef}&vnp_TransactionNo=${vnpResponse.vnp_TransactionNo}&vnp_Amount=${vnpResponse.vnp_Amount}&vnp_BankCode=${vnpResponse.vnp_BankCode}`,
       );
     } else {
       payment.status = "failed";
-
       await payment.save();
       res.redirect(`${frontendUrl}/payment-failed`); //todo:hardcoded
     }
