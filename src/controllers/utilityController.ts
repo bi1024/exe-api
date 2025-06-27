@@ -1,3 +1,4 @@
+import PaymentTransaction from "@/models/payment/PaymentTransaction";
 import User from "@/models/User";
 import VisitCountsModel from "@/models/VisitCount";
 import { NextFunction, Request, Response } from "express";
@@ -35,8 +36,34 @@ export const getDailyVisitCount = async (
   next: NextFunction,
 ) => {
   try {
-    const result = await VisitCountsModel.find();
+    const result = await VisitCountsModel.find().sort("date");
     res.status(StatusCodes.OK).json(result);
+  } catch (err) {
+    next(err);
+
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+};
+
+export const getTotalProfit = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const [result] = await PaymentTransaction.aggregate([
+      {
+        $match: { status: "success" }, // Filter only successful payments
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$amount" }, // Sum the `amount` field
+        },
+      },
+    ]);
+    const profit = result.totalAmount / 10;
+    res.status(StatusCodes.OK).json(profit);
   } catch (err) {
     next(err);
 
@@ -59,16 +86,17 @@ export const getDailyAggregateUserCount = async (
           dailyCount: { $sum: 1 },
         },
       },
-      {
-        $sort: { _id: 1 },
-      },
+      { $sort: { _id: 1 } }, // sort by date ascending
       {
         $setWindowFields: {
+          partitionBy: null,
           sortBy: { _id: 1 },
           output: {
             cumulativeCount: {
               $sum: "$dailyCount",
-              window: { documents: ["unbounded", "current"] },
+              window: {
+                documents: ["unbounded", "current"],
+              },
             },
           },
         },
