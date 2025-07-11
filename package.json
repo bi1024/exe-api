@@ -38,6 +38,7 @@
     "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
+    "@google/genai": "^1.8.0",
     "@paypal/paypal-server-sdk": "^1.0.0",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
