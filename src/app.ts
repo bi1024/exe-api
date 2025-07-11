@@ -12,6 +12,7 @@ import tutorScheduleRoutes from "@/routes/tutor/scheduleRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import studentBookingRoutes from "./routes/student/bookingRoutes.js";
 import tutorRoutes from "./routes/tutor/tutorRoutes.js";
+import chatbotRoutes from "./routes/chatbotRoutes.js";
 
 import dotenv from "dotenv";
 import profileRoutes from "./routes/profileRoutes.js";
@@ -48,6 +49,7 @@ app.use("/api/student/booking", studentBookingRoutes);
 app.use("/api/student/tutors-filter", tutorsFilterRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 app.use("/api/admin/tutors", tutorsManagementRoutes);
 
