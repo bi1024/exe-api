@@ -9,7 +9,7 @@ import {
 const tutorScheduleRoutes = express.Router();
 const tutorScheduleController = new TutorScheduleController();
 
-tutorScheduleRoutes.use(verifyToken, verifyTutor, verifyTutorApproved);
+tutorScheduleRoutes.use(verifyToken);
 
 tutorScheduleRoutes.get(
   "/",
@@ -42,5 +42,8 @@ tutorScheduleRoutes.delete(
   verifyTutor,
   tutorScheduleController.handleDeleteSingleSlot,
 );
+
+tutorScheduleRoutes.post('/copy-current-week', tutorScheduleController.handleCopyWeeksSchedule);
+tutorScheduleRoutes.post('/copy-current-month', tutorScheduleController.handleCopyMonthsSchedule);
 
 export default tutorScheduleRoutes;

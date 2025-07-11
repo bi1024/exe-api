@@ -1,5 +1,6 @@
 import { uploadImage } from "@/lib/cloudinary.js";
 import CertsModel, { ICert } from "@/models/Cert.js";
+import { TutorReviewModel } from "@/models/TutorReview";
 import User from "@/models/User.js";
 import { Request, Response } from "express";
 
@@ -11,7 +12,32 @@ export const getTutors = async (req: Request, res: Response) => {
     })
       .select("-password")
       .populate("skills"); // omit password from response
-    res.status(200).json({ success: true, data: tutors });
+
+    const tutorsResponsed = [];
+    for(const tutor of tutors) {
+        const result = await TutorReviewModel.aggregate([
+            {
+                $match: {
+                    tutor: tutor._id
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    ratingAverage: { $avg: '$rating' }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    ratingAverage: 1
+                }
+            }
+        ])  
+        const ratingAverage = result.length ? result[0].ratingAverage : 0;
+        tutorsResponsed.push({ ...tutor.toObject(), ratingAverage });
+    }
+    res.status(200).json({ success: true, data: tutorsResponsed });
   } catch (error) {
     console.error("Failed to fetch tutors:", error);
     res

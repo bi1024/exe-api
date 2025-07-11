@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import User, { IUser } from "@/models/User";
 import { StatusCodes } from "http-status-codes";
 import { uploadImage } from "@/lib/cloudinary";
+import PaymentTransaction from "@/models/payment/PaymentTransaction";
 
 export const getMyProfile = async (
   req: Request,
@@ -22,6 +23,28 @@ export const getMyProfile = async (
   res.status(StatusCodes.OK).json(myProfile);
 };
 
+export const getMyPayments = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  console.log("payments");
+  const userId = req.user!.userId;
+  // const myProfile = await User.findById(userId);
+
+  let myPayments;
+  try {
+    // myProfile = await User.findById(userId);
+    console.log(userId);
+    myPayments = await PaymentTransaction.find({ userId: userId });
+  } catch (err) {
+    next(err);
+    return;
+  }
+
+  res.status(StatusCodes.OK).json(myPayments);
+};
+
 export const getTutorProfile = async (
   req: Request,
   res: Response,
@@ -31,15 +54,15 @@ export const getTutorProfile = async (
   const userId = req.params.id;
   // const myProfile = await User.findById(userId);
 
-  let myProfile;
+  let tutorProfile;
   try {
-    myProfile = await User.findById(userId);
+    tutorProfile = await User.findById(userId);
   } catch (err) {
     next(err);
     return;
   }
 
-  res.status(StatusCodes.OK).json(myProfile);
+  res.status(StatusCodes.OK).json(tutorProfile);
 };
 export const updateMyProfile = async (
   req: Request,
