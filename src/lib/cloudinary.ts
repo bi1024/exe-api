@@ -33,4 +33,17 @@ export const uploadImage = (fileBuffer: Buffer): Promise<string> => {
   });
 };
 
+// Assumes buffer upload using memoryStorage
+export const uploadVideo = async (buffer: Buffer) => {
+  return await new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      { resource_type: 'video', folder: 'tutor_videos' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      },
+    ).end(buffer);
+  });
+};
+
 export default cloudinary;
