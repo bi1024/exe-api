@@ -9,14 +9,15 @@ export interface IUser extends Document {
   password: string;
   fullname: string;
   phone: string;
-  bio?:string;
+  bio?: string;
   avatarUrl?: string;
+  videoUrl?: string;
   role: UserRole;
   accountBalance: number;
   hourlyRate: number;
   createdAt: Date;
   updatedAt: Date;
-  status: UserStatus
+  status: UserStatus;
 }
 
 const userSchema = new Schema<IUser>(
@@ -28,10 +29,15 @@ const userSchema = new Schema<IUser>(
     phone: { type: String, required: true },
     bio: { type: String },
     avatarUrl: { type: String },
+    videoUrl: { type: String },
     role: { type: String, enum: ["user", "tutor", "admin"], default: "user" },
     accountBalance: { type: Number, default: 0 },
     hourlyRate: { type: Number, default: 0 },
-    status: { type: String, enum: ["pending", "approved", "rejected", "suspended"], default: "pending" }
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected", "suspended"],
+      default: "pending",
+    },
   },
   { timestamps: true },
 );
