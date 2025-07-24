@@ -110,3 +110,47 @@ export const getDailyAggregateUserCount = async (
     res.status(StatusCodes.INTERNAL_SERVER_ERROR);
   }
 };
+
+export const getDailyAggregateRevenue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await PaymentTransaction.aggregate([
+      {
+        $match: {
+          status: "success", // Filter only successful payments
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          dailyRevenue: { $sum: "$amount" },
+        },
+      },
+      { $sort: { _id: 1 } }, // Sort by date ascending
+      {
+        $setWindowFields: {
+          partitionBy: null,
+          sortBy: { _id: 1 },
+          output: {
+            cumulativeRevenue: {
+              $sum: "$dailyRevenue",
+              window: {
+                documents: ["unbounded", "current"],
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    res.status(StatusCodes.OK).json(result);
+  } catch (err) {
+    next(err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+};
