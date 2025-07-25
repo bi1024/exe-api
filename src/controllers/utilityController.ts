@@ -62,7 +62,7 @@ export const getTotalProfit = async (
         },
       },
     ]);
-    const profit = result.totalAmount / 10;
+    const profit = result.totalAmount;
     res.status(StatusCodes.OK).json(profit);
   } catch (err) {
     next(err);
@@ -114,7 +114,7 @@ export const getDailyAggregateUserCount = async (
 export const getDailyAggregateRevenue = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await PaymentTransaction.aggregate([
